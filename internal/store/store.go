@@ -6,7 +6,7 @@
 package store
 
 import (
-	"todo/internal/context"
+	"context"
 	"todo/internal/model"
 )
 
@@ -26,4 +26,5 @@ type TodoStore interface {
 	List(ctx context.Context, queries ...QueryFunc) (model.Todos, error)
 	Create(ctx context.Context, todo model.Todo) error
 	Update(ctx context.Context, index int, updates ...UpdateFunc) error
+	Count(ctx context.Context) (int, error)
 }

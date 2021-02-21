@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	RegAction("help", func(context *context.Context) {
-
+	RegAction("help", func(ctx *context.Context) error {
+		return nil
 	})
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 	"todo/internal/app"
 	"todo/internal/parser"
@@ -14,12 +15,15 @@ func main() {
 		actionName = "help"
 	}
 	actionName = os.Args[1]
-	e := app.NewEngine(parser.Parser, store.FileStore{})
+	fs := store.FileStore{}
+	fs.Init()
+	e := app.NewEngine(parser.Parser, &fs)
 
 	reader := bytes.NewBuffer(nil)
 	for _, arg := range os.Args[2:] {
 		reader.WriteString(arg)
 	}
-	write := bytes.NewBuffer(nil)
-	e.Run(actionName, reader, write)
+	buf := bytes.NewBuffer(nil)
+	e.Run(actionName, reader, buf)
+	fmt.Println(buf.String())
 }

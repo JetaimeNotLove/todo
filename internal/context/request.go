@@ -10,19 +10,19 @@ import (
 	"strconv"
 )
 
-type Param map[string]string
+type Params map[string]string
 
-type ParseParam func(io.Reader, Param)
+type ParseParam func(io.Reader, Params)
 
-func (p Param) Add(key, val string) {
+func (p Params) Add(key, val string) {
 	p[key] = val
 }
 
-func (p Param) String(key string) string {
+func (p Params) String(key string) string {
 	return p[key]
 }
 
-func (p Param) Int(key string) int {
+func (p Params) Int(key string) int {
 	val, ok := p[key]
 	if !ok {
 		return 0
@@ -31,11 +31,18 @@ func (p Param) Int(key string) int {
 	return res
 }
 
-func (p Param) Bool(key string) bool {
+func (p Params) Bool(key string) bool {
 	_, ok := p[key]
 	return ok
 }
 
+func (p Params) Keys() (res []string) {
+	for key, _ := range p {
+		res = append(res, key)
+	}
+	return
+}
+
 type Request struct {
-	Param
+	Params
 }

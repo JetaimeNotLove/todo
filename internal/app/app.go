@@ -6,6 +6,7 @@
 package app
 
 import (
+	context2 "context"
 	"io"
 	"todo/internal/actions"
 	"todo/internal/context"
@@ -23,14 +24,17 @@ func NewEngine(param context.ParseParam, store store2.TodoStore) *App {
 
 func (e App) Run(action string, param io.Reader, writer io.Writer) {
 	//	 初始化上下文
-	p := context.Param{}
+	p := context.Params{}
 	e.parse(param, p)
 
 	ctx := &context.Context{
-		Store: e.store,
-		Req:   context.Request{p},
-		Resp:  &context.Response{Output: writer},
+		context2.Background(),
+		e.store,
+		context.Request{Params: p},
+		&context.Response{Output: writer},
 	}
 
-	actions.DoAction(action, ctx)
+	if err := actions.DoAction(action, ctx); err != nil {
+		panic(err)
+	}
 }
