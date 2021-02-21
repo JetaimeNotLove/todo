@@ -7,9 +7,9 @@ package parser
 
 import (
 	"io"
-	"todo/internal/core"
+	"todo/internal/context"
 )
 
-func Parser(reader io.Reader, param core.Param) {
+func Parser(reader io.Reader, param context.Param) {
 
 }

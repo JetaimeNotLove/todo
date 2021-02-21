@@ -1,20 +1,14 @@
 /**
  * @Author: Huyantian
- * @Date: 2021/2/21 下午2:56
+ * @Date: 2021/2/21 下午5:11
  */
 
-package core
+package context
 
 import (
 	"io"
 	"strconv"
 )
-
-type Context struct {
-	Store TodoStore
-	Req   Request
-	Resp  *Response
-}
 
 type Param map[string]string
 
@@ -44,8 +38,4 @@ func (p Param) Bool(key string) bool {
 
 type Request struct {
 	Param
-}
-
-type Response struct {
-	output io.Writer
 }

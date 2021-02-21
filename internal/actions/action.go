@@ -1,4 +1,8 @@
-package core
+package actions
+
+import (
+	"todo/internal/context"
+)
 
 var (
 	actionMap map[string]Action
@@ -12,8 +16,8 @@ func RegAction(name string, action Action) {
 	actionMap[name] = action
 }
 
-func DoAction(name string, ctx *Context) {
+func DoAction(name string, ctx *context.Context) {
 	actionMap[name](ctx)
 }
 
-type Action func(*Context)
+type Action func(*context.Context)

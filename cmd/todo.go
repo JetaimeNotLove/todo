@@ -3,7 +3,7 @@ package main
 import (
 	"bytes"
 	"os"
-	"todo/internal/core"
+	"todo/internal/app"
 	"todo/internal/parser"
 	"todo/internal/store"
 )
@@ -14,7 +14,7 @@ func main() {
 		actionName = "help"
 	}
 	actionName = os.Args[1]
-	e := core.NewEngine(parser.Parser, store.FileStore{})
+	e := app.NewEngine(parser.Parser, store.FileStore{})
 
 	reader := bytes.NewBuffer(nil)
 	for _, arg := range os.Args[2:] {
