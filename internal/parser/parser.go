@@ -25,7 +25,6 @@ func Parser(reader io.Reader, param context.Params) {
 		var key, val string
 		key, val, index = getParam(data)
 		param.Add(key, val)
-
 	}
 	return
 }
