@@ -24,6 +24,15 @@ func (ts *Todos) Add(todo Todo) {
 	*ts = append(*ts, todo)
 }
 
+func (ts Todos) Get(index int) *Todo {
+	for i, t := range ts {
+		if t.Index == index {
+			return &ts[i]
+		}
+	}
+	return nil
+}
+
 type FilterFunc func(todo Todo) bool
 
 func MergeFilter(filters ...FilterFunc) FilterFunc {

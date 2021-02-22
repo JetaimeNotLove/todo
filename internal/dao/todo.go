@@ -3,7 +3,7 @@
  * @Date: 2021/2/21 下午3:00
  */
 
-package store
+package dao
 
 import (
 	"context"
@@ -22,7 +22,13 @@ type UpdateParam struct {
 
 type UpdateFunc func(param *UpdateParam)
 
-type TodoStore interface {
+func UpdateStatus(status model.Status) UpdateFunc {
+	return func(param *UpdateParam) {
+		param.M["Status"] = status
+	}
+}
+
+type TodoDao interface {
 	List(ctx context.Context, queries ...QueryFunc) (model.Todos, error)
 	Create(ctx context.Context, todo model.Todo) error
 	Update(ctx context.Context, index int, updates ...UpdateFunc) error

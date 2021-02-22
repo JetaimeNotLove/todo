@@ -10,15 +10,15 @@ import (
 	"io"
 	"todo/internal/actions"
 	"todo/internal/context"
-	store2 "todo/internal/store"
+	store2 "todo/internal/dao"
 )
 
 type App struct {
 	parse context.ParseParam
-	store store2.TodoStore
+	store store2.TodoDao
 }
 
-func NewEngine(param context.ParseParam, store store2.TodoStore) *App {
+func NewApp(param context.ParseParam, store store2.TodoDao) *App {
 	return &App{parse: param, store: store}
 }
 

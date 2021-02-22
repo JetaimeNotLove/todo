@@ -8,17 +8,17 @@ package context
 import (
 	"context"
 	"io"
-	"todo/internal/store"
+	"todo/internal/dao"
 )
 
 type Context struct {
 	context.Context
-	store.TodoStore
+	Todo dao.TodoDao
 	Request
 	*Response
 }
 
-func (c *Context) WriteLine(s string) {
+func (c *Context) WriteToOutput(s string) {
 	_, _ = c.Output.Write([]byte(s))
 	_, _ = c.Output.Write([]byte{'\n'})
 }

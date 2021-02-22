@@ -7,16 +7,16 @@ import (
 
 func init() {
 	RegAction("list", func(ctx *context.Context) error {
-		todos, err := ctx.List(ctx)
+		todos, err := ctx.Todo.List(ctx)
 		if err != nil {
 			return err
 		}
-		ctx.WriteLine("\n")
+		ctx.WriteToOutput("\n")
 		for _, todo := range todos {
-			ctx.WriteLine(fmt.Sprintf("%v. %v", todo.Index, todo.Content))
+			ctx.WriteToOutput(fmt.Sprintf("%v. %v", todo.Index, todo.Content))
 		}
-		ctx.WriteLine("\n")
-		ctx.WriteLine(fmt.Sprintf("Total: %v items", len(todos)))
+		ctx.WriteToOutput("\n")
+		ctx.WriteToOutput(fmt.Sprintf("Total: %v items", len(todos)))
 		return nil
 	})
 }

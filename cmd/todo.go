@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 	"todo/internal/app"
+	"todo/internal/dao/filedao"
 	"todo/internal/parser"
-	"todo/internal/store"
 )
 
 func main() {
@@ -15,9 +15,9 @@ func main() {
 		actionName = "help"
 	}
 	actionName = os.Args[1]
-	fs := store.FileStore{}
+	fs := filedao.FileStore{}
 	fs.Init()
-	e := app.NewEngine(parser.Parser, &fs)
+	e := app.NewApp(parser.Parser, &fs)
 
 	reader := bytes.NewBuffer(nil)
 	for _, arg := range os.Args[2:] {

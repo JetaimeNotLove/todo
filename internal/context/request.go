@@ -44,5 +44,5 @@ func (p Params) Keys() (res []string) {
 }
 
 type Request struct {
-	Params
+	Params Params
 }
