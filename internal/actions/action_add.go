@@ -17,6 +17,8 @@ func init() {
 			return fmt.Errorf("参数错误： %v", keys)
 		}
 		todo := model.Todo{Status: model.Undo, Index: c + 1, Content: keys[0]}
+		ctx.WriteLine(fmt.Sprintf("1. %v\n", todo.Content))
+		ctx.WriteLine(fmt.Sprintf("Item %v added", todo.Index))
 		return ctx.Create(ctx, todo)
 	})
 }
