@@ -16,6 +16,12 @@ type QueryParam struct {
 
 type QueryFunc func(param *QueryParam)
 
+func QueryStatus(status model.Status) QueryFunc {
+	return func(param *QueryParam) {
+		param.Status = status
+	}
+}
+
 type UpdateParam struct {
 	M map[string]interface{}
 }

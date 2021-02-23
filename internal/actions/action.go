@@ -17,7 +17,11 @@ func RegAction(name string, action Action) {
 }
 
 func DoAction(name string, ctx *context.Context) error {
-	return actionMap[name](ctx)
+	action, ok := actionMap[name]
+	if !ok {
+		return ErrActionNotFound
+	}
+	return action(ctx)
 }
 
 type Action func(*context.Context) error

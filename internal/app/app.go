@@ -7,6 +7,7 @@ package app
 
 import (
 	context2 "context"
+	"fmt"
 	"io"
 	"todo/internal/actions"
 	"todo/internal/context"
@@ -28,13 +29,13 @@ func (e App) Run(action string, param io.Reader, writer io.Writer) {
 	e.parse(param, p)
 
 	ctx := &context.Context{
-		context2.Background(),
-		e.store,
-		context.Request{Params: p},
-		&context.Response{Output: writer},
+		Context:  context2.Background(),
+		Todo:     e.store,
+		Request:  context.Request{Params: p},
+		Response: &context.Response{Output: writer},
 	}
 
 	if err := actions.DoAction(action, ctx); err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 }

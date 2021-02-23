@@ -7,6 +7,17 @@ package model
 
 type Status int
 
+func (s Status) String() string {
+	switch s {
+	default:
+		return ""
+	case Done:
+		return "Done"
+	case Undo:
+		return "Undo"
+	}
+}
+
 const (
 	Done Status = 1
 	Undo Status = 2

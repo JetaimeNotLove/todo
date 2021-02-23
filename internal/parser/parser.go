@@ -34,6 +34,7 @@ func getParam(data []byte) (string, string, int) {
 		key, val []byte
 		i        int
 	)
+	i = skip(i, data, skipSplit)
 	for len(data) > i {
 		v := data[i]
 		if v == ' ' || v == '=' {
@@ -47,7 +48,7 @@ func getParam(data []byte) (string, string, int) {
 
 	for len(data) > i {
 		v := data[i]
-		if v == '=' {
+		if v == '-' {
 			break
 		}
 		val = append(val, v)
