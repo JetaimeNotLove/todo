@@ -7,107 +7,64 @@ package filedao
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
-	"io/ioutil"
-	"os"
-	"path/filepath"
 	"reflect"
-	"todo/internal/dao"
-
-	"todo/internal/model"
-	"todo/pkg/file"
+	"todo/internal/model/todo"
 )
 
-const (
-	dir      = "./.todolist"
-	todolist = "todolist.json"
-)
-
-type FileStore struct {
+type TodoDao struct {
 }
 
-func (fs *FileStore) Init() {
-	if !file.Exists(dir) {
-		if err := os.Mkdir(dir, os.ModePerm|os.ModeDir); err != nil {
-			panic(err)
-		}
-	}
-	if !file.Exists(filepath.Join(dir, todolist)) {
-		f, err := os.Create(filepath.Join(dir, todolist))
-		if err != nil {
-			panic(f)
-		}
-		f.Close()
-	}
-}
-
-func (fs *FileStore) List(ctx context.Context, queries ...dao.QueryFunc) (model.Todos, error) {
-	fileName := filepath.Join(dir, todolist)
-	data, err := ioutil.ReadFile(fileName)
-	if err != nil {
+func (fs *TodoDao) List(ctx context.Context, queries ...todo.QueryFunc) (todo.Todos, error) {
+	todos := todo.Todos{}
+	if err := read(todolist, &todos); err != nil {
 		return nil, err
 	}
-	todos := model.Todos{}
-	if len(data) == 0 {
-		return todos, nil
-	}
-	if err := json.Unmarshal(data, &todos); err != nil {
-		return nil, err
-	}
-	filters := []model.FilterFunc{}
-	qp := new(dao.QueryParam)
+	filters := []todo.FilterFunc{}
+	qp := new(todo.QueryParam)
 	for _, query := range queries {
 		query(qp)
 	}
 	if qp.Status != 0 {
-		filters = append(filters, func(todo model.Todo) bool {
+		filters = append(filters, func(todo todo.Todo) bool {
 			return todo.Status == qp.Status
 		})
 	}
-	return todos.Filter(model.MergeFilter(filters...)), nil
+	return todos.Filter(todo.MergeFilter(filters...)), nil
 }
 
-func (fs *FileStore) Create(ctx context.Context, todo model.Todo) error {
+func (fs *TodoDao) Create(ctx context.Context, todo todo.Todo) error {
 	todos, err := fs.List(ctx)
 	if err != nil {
 		return err
 	}
 	todos.Add(todo)
-	data, err := json.Marshal(todos)
-	if err != nil {
-		return err
-	}
-	return ioutil.WriteFile(filepath.Join(dir, todolist), data, os.ModePerm)
+	return write(todolist, &todos)
 
 }
-func (fs *FileStore) Update(ctx context.Context, index int, updates ...dao.UpdateFunc) error {
+func (fs *TodoDao) Update(ctx context.Context, index int, updates ...todo.UpdateFunc) error {
 	todos, err := fs.List(ctx)
 	if err != nil {
 		return err
 	}
-	todo := todos.Get(index)
-	if todo == nil {
+	todoTiem := todos.Get(index)
+	if todoTiem == nil {
 		return errors.New("不存在todo")
 	}
-	up := dao.UpdateParam{M: map[string]interface{}{}}
+	up := todo.UpdateParam{M: map[string]interface{}{}}
 	for _, update := range updates {
 		update(&up)
 	}
-	v := reflect.ValueOf(todo).Elem()
+	v := reflect.ValueOf(todoTiem).Elem()
 	for key, val := range up.M {
 		f := v.FieldByName(key)
 		if !f.IsZero() {
 			f.Set(reflect.ValueOf(val))
 		}
 	}
-	data, err := json.Marshal(todos)
-	if err != nil {
-		return err
-	}
-	return ioutil.WriteFile(filepath.Join(dir, todolist), data, os.ModePerm)
+	return write(todolist, &todos)
 }
-func (fs *FileStore) Count(ctx context.Context) (int, error) {
+func (fs *TodoDao) Count(ctx context.Context) (int, error) {
 	todos, err := fs.List(ctx)
 	if err != nil {
 		return 0, err

@@ -7,36 +7,21 @@ package dao
 
 import (
 	"context"
-	"todo/internal/model"
+	"todo/internal/model/todo"
 )
 
-type QueryParam struct {
-	Status model.Status
+var todoDao TodoDao
+
+func SetTodo(dao TodoDao) {
+	todoDao = dao
 }
-
-type QueryFunc func(param *QueryParam)
-
-func QueryStatus(status model.Status) QueryFunc {
-	return func(param *QueryParam) {
-		param.Status = status
-	}
-}
-
-type UpdateParam struct {
-	M map[string]interface{}
-}
-
-type UpdateFunc func(param *UpdateParam)
-
-func UpdateStatus(status model.Status) UpdateFunc {
-	return func(param *UpdateParam) {
-		param.M["Status"] = status
-	}
+func Todo() TodoDao {
+	return todoDao
 }
 
 type TodoDao interface {
-	List(ctx context.Context, queries ...QueryFunc) (model.Todos, error)
-	Create(ctx context.Context, todo model.Todo) error
-	Update(ctx context.Context, index int, updates ...UpdateFunc) error
+	List(ctx context.Context, queries ...todo.QueryFunc) (todo.Todos, error)
+	Create(ctx context.Context, todo todo.Todo) error
+	Update(ctx context.Context, index int, updates ...todo.UpdateFunc) error
 	Count(ctx context.Context) (int, error)
 }

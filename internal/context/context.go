@@ -8,14 +8,14 @@ package context
 import (
 	"context"
 	"io"
-	"todo/internal/dao"
 )
 
 type Context struct {
 	context.Context
-	Todo dao.TodoDao
 	Request
 	*Response
+
+	value map[string]interface{}
 }
 
 func (c *Context) WriteToOutput(s string) {

@@ -11,28 +11,25 @@ import (
 	"io"
 	"todo/internal/actions"
 	"todo/internal/context"
-	store2 "todo/internal/dao"
 )
 
 type App struct {
 	parse context.ParseParam
-	store store2.TodoDao
 }
 
-func NewApp(param context.ParseParam, store store2.TodoDao) *App {
-	return &App{parse: param, store: store}
+func NewApp(param context.ParseParam) *App {
+	return &App{parse: param}
 }
 
-func (e App) Run(action string, param io.Reader, writer io.Writer) {
+func (e App) Run(action string, input io.Reader, output io.Writer) {
 	//	 初始化上下文
 	p := context.Params{}
-	e.parse(param, p)
+	e.parse(input, p)
 
 	ctx := &context.Context{
 		Context:  context2.Background(),
-		Todo:     e.store,
 		Request:  context.Request{Params: p},
-		Response: &context.Response{Output: writer},
+		Response: &context.Response{Output: output},
 	}
 
 	if err := actions.DoAction(action, ctx); err != nil {

@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"todo/internal/context"
 	"todo/internal/dao"
-	"todo/internal/model"
+	"todo/internal/model/todo"
 )
 
 func init() {
@@ -19,6 +19,6 @@ func init() {
 			return err
 		}
 		ctx.WriteToOutput(fmt.Sprintf("Item %v done.", index))
-		return ctx.Todo.Update(ctx, index, dao.UpdateStatus(model.Done))
+		return dao.Todo().Update(ctx, index, todo.UpdateStatus(todo.Done))
 	})
 }
